@@ -36,7 +36,6 @@
 #include <QTabWidget>
 #include <QStringList>
 #include <QUrl>
-
 struct Q_DECL_HIDDEN KNotification::Private {
     QString eventId;
     int id;
@@ -476,6 +475,11 @@ int KNotification::id()
         return -1;
     }
     return d->id;
+}
+
+void KNotification::setId(int id)
+{
+    d->id = id;
 }
 
 QString KNotification::appName() const

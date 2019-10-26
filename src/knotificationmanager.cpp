@@ -291,6 +291,12 @@ void KNotificationManager::close(int id, bool force)
 
 int KNotificationManager::notify(KNotification *n)
 {
+    d->notifyIdCounter++;
+    if(n->id() == -1) {
+        if(n->eventId() != QStringLiteral("notification")) {
+            n->setId(d->notifyIdCounter);
+        }
+    }
     KNotifyConfig notifyConfig(n->appName(), n->contexts(), n->eventId());
 
     if (d->dirtyConfigCache.contains(n->appName())) {
@@ -333,12 +339,14 @@ int KNotificationManager::notify(KNotification *n)
         }
 
         n->ref();
-        qCDebug(LOG_KNOTIFICATIONS) << "Calling notify on" << notifyPlugin->optionName();
-        notifyPlugin->notify(n, &notifyConfig);
+        if(n->id() != -1 && n->eventId() != QStringLiteral("notification")){
+            qCDebug(LOG_KNOTIFICATIONS) << "Calling notify on" << notifyPlugin->optionName();
+            notifyPlugin->notify(n, &notifyConfig);
+        }
     }
 
     connect(n, &KNotification::closed, this, &KNotificationManager::notificationClosed);
-    return d->notifyIdCounter++;
+    return d->notifyIdCounter;
 }
 
 void KNotificationManager::update(KNotification *n)
