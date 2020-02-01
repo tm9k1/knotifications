@@ -141,13 +141,6 @@ NotifyBySnore::~NotifyBySnore()
 void NotifyBySnore::notify(KNotification *notification, KNotifyConfig *config)
 {
     Q_UNUSED(config);
-    // HACK work around that notification->id() is only populated after returning from here
-    // note that config will be invalid at that point, so we can't pass that along
-    QMetaObject::invokeMethod(this, [this, notification](){ notifyDeferred(notification); }, Qt::QueuedConnection);
-}
-
-void NotifyBySnore::notifyDeferred(KNotification* notification)
-{
     QProcess *proc = new QProcess();
     QStringList arguments;
 

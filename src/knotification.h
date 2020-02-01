@@ -679,6 +679,13 @@ private:
     struct Private;
     Private *const d;
 
+    /**
+     * @internal
+     * set the id using notification manager
+     */
+    friend class KNotificationManager;
+    void setId(int id);
+
 protected:
     /**
      * reimplemented for internal reasons
